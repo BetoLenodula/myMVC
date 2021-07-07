@@ -1,0 +1,1 @@
+<style<?= $args ?>><?= $content ?></style>

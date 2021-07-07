@@ -1,0 +1,1 @@
+<title<?= $args ?>><?= $content ?></title>

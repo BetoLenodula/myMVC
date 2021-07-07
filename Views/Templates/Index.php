@@ -1,33 +1,30 @@
 <?php
   namespace Views\Templates;
 
-  class Index{
+  use Views\Templates\BaseTemplates\Base\Head;
+
+  class Index extends BaseTemplates\Base\Template{
 
       private static $me;
 
       public function __construct(){
-  ?>
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8">
-    <title>Index</title>
-  </head>
-  <body>
-
-  <?php
+          parent::open("html", "lang: es");
+            $h = new Head();
+            $h->set("meta", "charset: UTF-8", null);
+            $h->set("meta", "name:viewport; content: width=device-width, initial-scale=1.0", null);
+            $h->set("title", null, "My Title");
+            $h->close();
+            parent::open("body", null);
+            
       }
 
       public function __destruct(){
-  ?>
-
-  </body>
-</html>
-  <?php
+            parent::close("body");
+          parent::close("html");
       }
 
       public static function run(){
-        self::$me = new self();
+          self::$me = new self();
       }
   }
 
