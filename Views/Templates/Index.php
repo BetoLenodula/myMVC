@@ -15,7 +15,8 @@
             $h->set("title", null, "My Title");
             $h->close();
             parent::open("body", null);
-            
+              parent::load("nav");
+
       }
 
       public function __destruct(){
