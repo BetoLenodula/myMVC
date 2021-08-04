@@ -6,21 +6,26 @@
  class Route{
 
    private static $routes = [];
-   private static $data_returned;
+   private static $data_returned = null;
+   private static $form_values   = null;
+   private static $form_errors   = null;
 
-   public static function get($callback){
+   public static function get($callback, $data = null, $frmv = null, $err = null){
 
      $request = new Request();
 
      $controller = $request->get_controller();
      $method     = $request->get_method();
      $arguments  = $request->get_arguments();
-     $json       = $request->get_json();
 
      Routes::run();
 
+     self::$data_returned = $data;
+     self::$form_values   = $frmv;
+     self::$form_errors   = $err;
+
      $function = $callback();
-     return self::$function($controller, $method, $arguments, $json);
+     return self::$function($controller, $method, $arguments);
 
    }
 
@@ -42,53 +47,48 @@
 
    }
 
-   public function data($controller, $method, $arguments = [], $json = null){
+   public function response($controller, $method, $arguments = []){
 
      if(self::match_routes($controller, $method)){
-       $controller_route = ROOT."Controllers".DS.$controller."Controller.php";
+       $controller_route = ROOT."Controllers".DS.ucwords($controller)."Controller.php";
 
        if(is_readable($controller_route)){
           require_once($controller_route);
 
-          $instance = "Controllers\\".$controller."Controller";
+          $instance = "Controllers\\".ucwords($controller)."Controller";
 					$controller_i = new $instance();
 
-          self::$data_returned = call_user_func(array($controller_i, $method), $arguments);
+          call_user_func_array(array($controller_i, $method), $arguments);
 
-
-					if(! $json){
-						return self::view($controller, $method, $arguments);
-					}
-					else{
-						return self::$data_returned;
-					}
        }
        else{
-         return "Controller Not Found!";
+         print "Controller Not Found!";
        }
 
      }
      else{
-       return "404 Page Not Found!";
+       print "404 Page Not Found!";
      }
 
    }
 
-   public function view($controller, $method, $arguments = [], $json = null){
+   public function view($controller, $method, $arguments = []){
 
        if(self::match_routes($controller, $method)){
          $view_route = ROOT."Views".DS.$controller.DS.$method.".php";
 
          if(is_readable($view_route)){
-           $data_response = self::$data_returned;
+           $old      = self::$form_values;
+           $err      = self::$form_errors;
+           $response = self::$data_returned;
            require_once($view_route);
          }
          else{
-           return "View Not Found!";
+           print "View Not Found!";
          }
       }
       else{
-        return "404 Page Not Found";
+        print "404 Page Not Found";
       }
 
    }
@@ -108,5 +108,3 @@
    }
 
  }
-
- ?>

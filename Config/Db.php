@@ -2,16 +2,18 @@
 
   return [
 
-    "Drive"    => "",
+    "Drive"    => "mysql",
 
-    "Host"     => "",
+    "Charset"  => "utf8",
 
-    "User"     => "",
+    "Host"     => "localhost",
 
-    "Password" => "",
+    "User"     => "root",
 
-    "Database" => ""
+    "Password" => "23e7085a",
+
+    "Database" => "intranet"
 
   ];
 
- ?>
+ 

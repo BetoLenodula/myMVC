@@ -3,6 +3,7 @@
 
   class Template{
 
+    protected static $me;
     private static $wrap;
 
     public function __construct(){}
@@ -19,7 +20,14 @@
     }
 
     public static function load($html_block){
-        include(ROOT."Views/Templates/BaseTemplates/public_html/".$html_block.".php");
+        $route_html = ROOT."Views/Templates/BaseTemplates/public_html/".$html_block.".php";
+
+        if(is_readable($route_html)){
+          include($route_html);
+        }
+        else{
+          return "The HTML File Was Not Found!";
+        }
     }
 
 
@@ -44,4 +52,4 @@
 
   }
 
- ?>
+ 

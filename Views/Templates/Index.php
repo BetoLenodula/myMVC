@@ -5,28 +5,27 @@
 
   class Index extends BaseTemplates\Base\Template{
 
-      private static $me;
+      public function __construct($arg = null){
 
-      public function __construct(){
-          parent::open("html", "lang: es");
+          self::open("html", "lang: es");
             $h = new Head();
-            $h->set("meta", "charset: UTF-8", null);
-            $h->set("meta", "name:viewport; content: width=device-width, initial-scale=1.0", null);
             $h->set("title", null, "My Title");
+            $h->set("meta", "charset: UTF-8");
+            $h->set("meta", "name: viewport; content: width=device-width, initial-scale=1.0");
+            $h->set("link", "rel: stylesheet; href: /Views/assets/bootstrap/css/bootstrap.min.css");
             $h->close();
-            parent::open("body", null);
-              parent::load("nav");
+            self::open("body");
 
       }
 
       public function __destruct(){
-            parent::close("body");
-          parent::close("html");
+              self::open("script", "src: /Views/assets/bootstrap/js/bootstrap.bundle.min.js");self::close("script");
+            self::close("body");
+          self::close("html");
       }
 
-      public static function run(){
-          self::$me = new self();
+      public static function run($arg = null){
+        self::$me = new self($arg);
       }
+
   }
-
- ?>

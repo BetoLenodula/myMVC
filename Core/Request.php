@@ -6,7 +6,6 @@
     private $controller;
     private $method;
     private $arguments = [];
-    private $json;
 
     public function __construct(){
 
@@ -19,6 +18,10 @@
           $this->controller = array_shift($url);
           $this->method = array_shift($url);
 
+          if(! $this->controller){
+            $this->controller = DEFAULT_CONTROLLER;
+          }
+
           if(! $this->method){
             $this->method = DEFAULT_METHOD;
           }
@@ -28,10 +31,6 @@
         else{
           $this->controller = DEFAULT_CONTROLLER;
           $this->method = DEFAULT_METHOD;
-        }
-
-        if(isset($_REQUEST['json'])){
-          $this->json = filter_var($_REQUEST['json'], FILTER_VALIDATE_BOOLEAN);
         }
 
     }
@@ -48,11 +47,7 @@
       return $this->arguments;
     }
 
-    public function get_json(){
-      return $this->json;
-    }
-
 
   }
 
- ?>
+ 

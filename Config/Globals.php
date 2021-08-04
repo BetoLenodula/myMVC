@@ -3,13 +3,13 @@
   define("DOMAIN", "localhost");
 
   //constantes de email SMTP
-  define("EMAIL", "@".DOMAIN);
+  define("EMAIL", "[]@".DOMAIN);
 
   define("EMAIL_PORT", ":25");
 
   define("EMAIL_HOST", DOMAIN.EMAIL_PORT);
 
-  define("EMAIL_PASSWORD", "");
+  define("EMAIL_PASSWORD", "[]");
 
   //constantes de entorno
   define("PROTOCOL", "http");
@@ -20,8 +20,8 @@
 
 	define("URL", PROTOCOL."://".DOMAIN."/");
 
-	define("DEFAULT_CONTROLLER", "indexes");
+	define("DEFAULT_CONTROLLER", "pages");
 
 	define("DEFAULT_METHOD", "index");
 
- ?>
+ 

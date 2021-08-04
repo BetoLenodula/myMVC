@@ -5,8 +5,8 @@
 
   Core\Autoload::run();
 
-  $data = Core\Route::get(function(){
-    return "data";
+  Core\Route::get(function(){
+    return "response";
   });
 
- ?>
+ 

@@ -7,10 +7,10 @@
 
     public static function run(){
 
-      Route::put("/index");
+      Route::put("/pages");
+
+      Route::put("/pages/nuevo");
 
     }
 
   }
-
- ?>

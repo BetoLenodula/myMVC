@@ -1,1 +1,1 @@
-<link rel="stylesheet"<?= $args ?>>
+<link<?= $args ?>>
