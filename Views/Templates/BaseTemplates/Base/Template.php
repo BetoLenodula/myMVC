@@ -19,8 +19,17 @@
          include("end_block.php");
     }
 
-    public static function load($html_block){
-        $route_html = ROOT."Views/Templates/BaseTemplates/public_html/".$html_block.".php";
+    public static function load($html_block, $arg = null){
+        self::get_html($html_block, $arg);
+    }
+
+    public static function paste($html_block, $arg = null){
+        self::get_html($html_block, $arg, "parcials/");
+    }
+
+    
+    protected function get_html($html, $arg = null, $sub_dir = null){
+        $route_html = ROOT."Views/Templates/BaseTemplates/html/{$sub_dir}".$html.".php";
 
         if(is_readable($route_html)){
           include($route_html);

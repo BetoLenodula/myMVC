@@ -27,6 +27,7 @@
           }
 
           $this->arguments = $url;
+        
         }
         else{
           $this->controller = DEFAULT_CONTROLLER;

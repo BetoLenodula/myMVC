@@ -1,9 +1,10 @@
 <?php
   namespace Core;
 
-  use Classes\Cache;
 
   class BaseController{
+
+    use \Config\Helpers;
 
     protected function model($model){
       $route_model = ROOT."Models".DS.ucwords($model).".php";
@@ -32,27 +33,5 @@
         header("Location: {$location}");
     }
 
-    protected function validate($array, $request){
-      return Validate::request($array, $request);
-    }
-
-    protected function set_cache($time_expires){
-      Cache::configure(array(
-        'cache_path' => ROOT.'Core/Cache',
-        'expires' => ($time_expires)
-      ));
-    }
-
-    protected function put_cache($args, $content){
-      Cache::put($args, $content);
-    }
-
-    protected function get_cache($args){
-      return Cache::get($args);
-    }
-
-    protected function del_cache($args){
-      Cache::delete($args);
-    }
 
   }

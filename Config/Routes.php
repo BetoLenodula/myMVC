@@ -11,6 +11,8 @@
 
       Route::put("/pages/nuevo");
 
+      Route::put("/pages/pagina");
+
     }
 
   }

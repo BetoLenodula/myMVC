@@ -12,6 +12,7 @@
     }
 
     public function set_fields($set){
+      $this->sql = "";
       $this->set = $set;
     }
 

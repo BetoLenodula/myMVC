@@ -34,19 +34,29 @@
 
     public function return($sql){
       if($this->con->real_escape_string($sql)){
-        return $this->con->query($sql);
+        $res = $this->con->query($sql);
+        if(! $res){
+          return $this->con->error." : \"".$sql."\"";
+        }
+        else{
+          return $res;
+        }
       }
       else{
-        return "Error: SQL String is Invalid!";
+        return "Error: real escape string invalid!";
       }
     }
 
     public function exec($sql){
       if($this->con->real_escape_string($sql)){
-        $this->con->query($sql);
+
+        if(!$this->con->query($sql)){
+          return $this->con->error." : \"".$sql."\"";
+        }
+
       }
       else{
-        return "Error: SQL String is Invalid!";
+        return "Error: real escape string invalid!";
       }
     }
 

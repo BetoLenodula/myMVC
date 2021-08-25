@@ -27,6 +27,7 @@
       $this->view($arr);
     }
 
+
     public function nuevo(){
       $page = $this->model("Page");
 
@@ -35,16 +36,17 @@
               'tipo'     => 'required'
              ], $_REQUEST);
 
-      $dat = "Enviame";
+      $dat['msg'] = "Enviame";
 
-      if($frm['return']){
+      if($frm['return'] && $this->token()){
         $page->set("nombre_pagina, tipo_pagina");
         $page->nombre_pagina = $_REQUEST['nombre'];
         $page->tipo_pagina   = $_REQUEST['tipo'];
         $res = $page->nuevo();
 
+
         if($res){
-          $dat = "Registro guardado con éxito";
+          $dat['msg'] = "Registro guardado con éxito";
         }
       
       }
@@ -52,5 +54,24 @@
       $this->view($dat, $frm['old'], $frm['err']);
 
     }
+
+    public function pagina($pg = 1){
+       $page = $this->model("Page");
+       $arr['pages'] = $page->paginate(3);
+       $page->set("id, nombre_pagina");
+       $page->limit = $this->page($pg, 3);
+       $res = $page->findLimited();
+
+
+        $dats = array();
+      
+        while($r = $res->fetch_object()) {
+          $dats[] = $r;
+        }
+
+      $arr['d'] = $dats;
+      $this->view($arr);
+    }
+
 
   }

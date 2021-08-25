@@ -120,5 +120,34 @@
         $this->con->close();
       }
 
+      public function findLimited(){
+        $this->orm->set_fields($this->set);
+        $sql = $this->orm->find()->limit()->end();
+        $res = $this->con->return($sql);
+
+        if(!empty($res)){
+          return $res;
+        }
+        else{
+          return false;
+        }
+
+        $this->con->close();
+      }
+
+      public function paginate($num_items){
+        $this->set['fields_set'] = "id";
+        $this->orm->set_fields($this->set);
+        $sql = $this->orm->find()->end();
+
+        $rows = $this->con->return($sql);
+      
+        $rows = ceil(($rows->num_rows) / $num_items);  
+
+        return $rows;
+
+        $this->con->close();
+      }
+
 
   }

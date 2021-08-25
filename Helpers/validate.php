@@ -1,7 +1,7 @@
 <?php
- namespace Core;
+ namespace Helpers;
 
- trait Validate{
+ trait validate{
 
     private static $filters = [
      'numeric' => FILTER_VALIDATE_INT,
@@ -33,7 +33,7 @@
     private static $REQUEST = array();
     private static $ERROR   = array();
 
-    public static function request($values, $request){
+    public function validate($values, $request){
       $return = false;
       self::$REQUEST = $request;
 
@@ -53,7 +53,6 @@
         self::$REQUEST = array_replace(self::$REQUEST, self::$ERROR);
         $return = true;
       }
-
 
       return ['old' => self::$REQUEST, 'err' => self::$ERROR, 'return' => $return];
 

@@ -25,8 +25,18 @@
      self::$form_errors   = $err;
 
      $function = $callback();
-     return self::$function($controller, $method, $arguments);
 
+     if($function != "response" && $function != "view"){
+        self::show($function, $data);
+     }
+     else{
+        return self::$function($controller, $method, $arguments);
+     }
+
+   }
+
+   public function show($return, $data = null){
+      echo $return;
    }
 
    public static function put($route){
@@ -77,10 +87,17 @@
        if(self::match_routes($controller, $method)){
          $view_route = ROOT."Views".DS.$controller.DS.$method.".php";
 
+         $execute = "Controllers\\".ucwords($controller)."Controller";
+         $execute = new $execute;
+
          if(is_readable($view_route)){
            $old      = self::$form_values;
            $err      = self::$form_errors;
            $response = self::$data_returned;
+
+           $pag = (!isset($arguments[0]) ? 1 : $arguments[0]);
+           $pagination = ['res' => $response, 'url' => "/{$controller}/{$method}/", 'pag' => $pag];
+           
            require_once($view_route);
          }
          else{
