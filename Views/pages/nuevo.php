@@ -1,7 +1,7 @@
 <?= Views\Templates\Index::run()  ?>
 <p><?= $response['msg'] ?></p>
 <div class="container-fluid">
-  <form class="container p-5" action="/pages/nuevo" method="post">
+  <form class="container p-5" action="/pages/nuevo" method="post" enctype="multipart/form-data">
     <label for="">Nombre página</label>
     <input type="text" class="form-control" name="nombre" value="<?= $old['nombre'] ?>">
     <small class="text-danger"><?= $err['nombre'] ?></small><br>

@@ -32,7 +32,7 @@
       $page = $this->model("Page");
 
       $frm = $this->validate([
-              'nombre'   => 'regex: /^[0-9A-Za-z\s]*$/ | min:1 | max:15',
+              'nombre'   => 'required | email | max:30',
               'tipo'     => 'required'
              ], $_REQUEST);
 

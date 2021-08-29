@@ -3,6 +3,8 @@
 
  trait validate{
 
+    use filter;
+
     private static $filters = [
      'numeric' => FILTER_VALIDATE_INT,
      'email'   => FILTER_VALIDATE_EMAIL,
@@ -13,20 +15,23 @@
     ];
 
     private static $errors = [
-     'numeric'  => '* The dat is not a number',
-     'email'    => '* The email format is wrong',
-     'url'      => '* The URL format is wrong',
-     'float'    => '* The float number is wrong',
-     'bool'     => '* The bool value is wrong',
-     'ip'       => '* The IP format is wrong',
-     'max'      => '* The number of characters exceeded the limit',
-     'min'      => '* Missing characters',
-     'equals'   => '* The value does not match',
-     'higher'   => '* The values is lower than expected',
-     'lower'    => '* The value is higher than expected',
-     'regex'    => '* The expresion is wrong',
-     'required' => '* Tha value is required',
-     'date'     => '* The Date format is not valid'
+     'numeric'  => '* The field is not a number',
+     'email'    => '* The email field format is wrong',
+     'url'      => '* The URL field format is wrong',
+     'float'    => '* The float number field is wrong',
+     'bool'     => '* The bool field is wrong',
+     'ip'       => '* The IP format field is wrong',
+     'max'      => '* The number of characters exceeded the limit in field',
+     'min'      => '* Missing characters in field',
+     'equals'   => '* The field does not match expected value',
+     'unequal'  => '* The field must be different from the one received',
+     'higher'   => '* The field is lower than expected',
+     'lower'    => '* The field is higher than expected',
+     'regex'    => '* The field is wrong, may contain some characters not allowed',
+     'required' => '* The field is required',
+     'date'     => '* The Date format field is not valid',
+     'richtxt'  => null,
+     'void'     => null
     ];
 
 
@@ -50,6 +55,7 @@
       }
 
       if(! empty(self::$ERROR) && ! array_filter(self::$ERROR) && count($request) > 1){
+        $_REQUEST      = array_replace($_REQUEST, self::$REQUEST);
         self::$REQUEST = array_replace(self::$REQUEST, self::$ERROR);
         $return = true;
       }
@@ -59,12 +65,16 @@
     }
 
     public static function prepare_validator($name, $value, $filter){
+
+      $fil = null;
       
       $filter = explode("|", $filter);
 
       if(count($filter) > 1){
 
         foreach($filter as $key){
+          $fil = $key;
+
           if(! self::validator($key, $name, $value)){
             break;
           }
@@ -72,16 +82,18 @@
 
       }
       else{
-        
-        self::validator(current($filter), $name, $value);
+
+          $fil = current($filter);
+
+          self::validator(current($filter), $name, $value);
             
       }
 
-      self::sanitized($name, $value);
+      self::sanitized($name, $value, trim($fil));
     }
 
 
-    public static function validator($key, $name, $value){
+    public static function validator($key, $name, $value){  
 
       if(array_key_exists(trim($key), self::$filters)){
 
@@ -90,7 +102,7 @@
           return true;
         }
         else{
-          count($_REQUEST) > 1 ? self::$ERROR[$name] = self::$errors[trim($key)] : self::$ERROR[$name] = "";
+          count($_REQUEST) > 1 ? self::$ERROR[$name] = str_replace("field", $name, self::$errors[trim($key)]) : self::$ERROR[$name] = "";
           return false;
         }
 
@@ -101,14 +113,10 @@
         $function = trim(current($key));
         $argument = trim(end($key));
 
-        if($function === "text" || $function === "empty"){
-          return true;
-        }
-
         $res = self::$function($value, $argument);
 
         if(! $res){
-          count($_REQUEST) > 1 ? self::$ERROR[$name] = self::$errors[$function] : self::$ERROR[$name] = "";
+          count($_REQUEST) > 1 ? self::$ERROR[$name] = str_replace("field", $name, self::$errors[$function]) : self::$ERROR[$name] = "";
         }
         else{
           self::$ERROR[$name] = "";
@@ -119,9 +127,15 @@
 
     }
 
-    public static function sanitized($name, $value){
-      $value = trim(filter_var($value, FILTER_SANITIZE_STRING));
-      $value = filter_var($value, FILTER_SANITIZE_MAGIC_QUOTES);
+
+    public static function sanitized($name, $value, $filter){
+      if($filter === "richtxt"){
+        $value = filter::filter($value);
+      }
+      else{
+        $value = trim(filter_var($value, FILTER_SANITIZE_STRING));
+        $value = filter_var($value, FILTER_SANITIZE_MAGIC_QUOTES);
+      }
 
       self::$REQUEST[$name] = $value;
     }
@@ -179,6 +193,15 @@
       }
     }
 
+    public static function unequal($value, $argument){
+      if($value != $argument){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+
     public static function higher($value, $argument){
       if($value > $argument){
         return true;
@@ -204,6 +227,15 @@
       else{
         return false;
       }
+    }
+
+    public static function richtxt($value = null, $argument = null){
+      return true;
+    }
+
+
+    public static function void($value = null, $argument = null){
+      return true;
     }
 
 
