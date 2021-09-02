@@ -30,8 +30,8 @@
      'regex'    => '* The field is wrong, may contain some characters not allowed',
      'required' => '* The field is required',
      'date'     => '* The Date format field is not valid',
-     'richtxt'  => null,
-     'void'     => null
+     'richtxt'  => '* The field text contains tags not allowed',
+     'void'     => '* The field must be empty'
     ];
 
 
@@ -40,7 +40,14 @@
 
     public function validate($values, $request){
       $return = false;
+
+      if($_FILES){
+        array_push($request, $_FILES);
+      }
+
       self::$REQUEST = $request;
+
+      echo var_dump(self::$REQUEST);
 
       foreach($values as $key => $filter) {
         
@@ -51,16 +58,18 @@
           $value = $request[$key];
         }
 
+        $request[$key] = $value;
         self::prepare_validator($key, $value, $filter);
+
       }
 
-      if(! empty(self::$ERROR) && ! array_filter(self::$ERROR) && count($request) > 1){
+      if(! empty(self::$ERROR) && ! array_filter(self::$ERROR) && count($_REQUEST) > 1){
         $_REQUEST      = array_replace($_REQUEST, self::$REQUEST);
         self::$REQUEST = array_replace(self::$REQUEST, self::$ERROR);
-        $return = true;
+        $return        = true;
       }
 
-      return ['old' => self::$REQUEST, 'err' => self::$ERROR, 'return' => $return];
+      return ['old' => $request, 'err' => self::$ERROR, 'return' => $return];
 
     }
 
@@ -203,7 +212,7 @@
     }
 
     public static function higher($value, $argument){
-      if($value > $argument){
+      if($value > $argument || $value >= $argument){
         return true;
       }
       else{
@@ -212,7 +221,7 @@
     }
 
     public static function lower($value, $argument){
-      if($value < $argument){
+      if($value < $argument || $value <= $argument){
         return true;
       }
       else{

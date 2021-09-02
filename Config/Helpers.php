@@ -12,5 +12,6 @@ use \Helpers\normalize;
 use \Helpers\filter;
 use \Helpers\resizing;
 use \Helpers\randpatterns;
+use \Helpers\files;
 
 }

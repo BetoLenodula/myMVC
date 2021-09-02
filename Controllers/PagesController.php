@@ -38,6 +38,7 @@
 
       $dat['msg'] = "Enviame";
 
+
       if($frm['return'] && $this->token()){
         $page->set("nombre_pagina, tipo_pagina");
         $page->nombre_pagina = $_REQUEST['nombre'];
@@ -50,6 +51,7 @@
         }
       
       }
+      //echo $this->upload('foto', ROOT."Var".DS."Resources", null, null);
 
       $this->view($dat, $frm['old'], $frm['err']);
 

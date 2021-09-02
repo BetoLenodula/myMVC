@@ -9,6 +9,7 @@
     <input type="text" class="form-control" name="tipo" value="<?= $old['tipo'] ?>">
     <small class="text-danger"><?= $err['tipo']  ?></small><br>
     <input type="hidden" name="tkn" value="<?= $execute->get_token() ?>">
+    <input type="file" name="foto" value=""><br>
     <button type="submit" class="btn btn-primary mt-3">Enviar</button>
   </form>
 </div>
