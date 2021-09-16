@@ -33,16 +33,18 @@
 
       $frm = $this->validate([
               'nombre'   => 'required | email | max:30',
-              'tipo'     => 'required'
+              'tipo'     => 'required',
+              'foto'     => 'be_file | file_size: 1 | file_type: mime'
              ], $_REQUEST);
 
       $dat['msg'] = "Enviame";
 
 
       if($frm['return'] && $this->token()){
-        $page->set("nombre_pagina, tipo_pagina");
+        $page->set("nombre_pagina, tipo_pagina, file");
         $page->nombre_pagina = $_REQUEST['nombre'];
         $page->tipo_pagina   = $_REQUEST['tipo'];
+        $page->file          = $this->upload("var/resources/");
         $res = $page->nuevo();
 
 
@@ -51,7 +53,6 @@
         }
       
       }
-      //echo $this->upload('foto', ROOT."Var".DS."Resources", null, null);
 
       $this->view($dat, $frm['old'], $frm['err']);
 
@@ -59,9 +60,10 @@
 
     public function pagina($pg = 1){
        $page = $this->model("Page");
-       $arr['pages'] = $page->paginate(3);
+       $arr['pages'] = $page->paginate(2);
+
        $page->set("id, nombre_pagina");
-       $page->limit = $this->page($pg, 3);
+       $page->limit = $this->page_range($pg, 2);
        $res = $page->findLimited();
 
 

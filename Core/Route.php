@@ -95,7 +95,7 @@
            $err      = self::$form_errors;
            $response = self::$data_returned;
 
-           $pag = (!isset($arguments[0]) ? 1 : $arguments[0]);
+           $pag = (!isset($arguments[0]) || !is_numeric($arguments[0]) ? 1 : $arguments[0]);
            $pagination = ['res' => $response, 'url' => "/{$controller}/{$method}/", 'pag' => $pag];
            
            require_once($view_route);

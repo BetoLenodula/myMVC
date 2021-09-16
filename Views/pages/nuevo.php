@@ -10,6 +10,7 @@
     <small class="text-danger"><?= $err['tipo']  ?></small><br>
     <input type="hidden" name="tkn" value="<?= $execute->get_token() ?>">
     <input type="file" name="foto" value=""><br>
+    <small class="text-danger"><?= $err['foto']  ?></small><br>
     <button type="submit" class="btn btn-primary mt-3">Enviar</button>
   </form>
 </div>

@@ -3,8 +3,8 @@
 
  trait paginate{
  	
- 	public function page($page, $lim){
-      if(! $page || $page < 0){
+ 	public function page_range($page, $lim){
+      if(! $page || $page < 0 || ! is_numeric($page)){
         $page= 1; 
       }
 

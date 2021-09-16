@@ -3,7 +3,7 @@
 
  trait validate{
 
-    use filter;
+    use filter, files;
 
     private static $filters = [
      'numeric' => FILTER_VALIDATE_INT,
@@ -15,23 +15,26 @@
     ];
 
     private static $errors = [
-     'numeric'  => '* The field is not a number',
-     'email'    => '* The email field format is wrong',
-     'url'      => '* The URL field format is wrong',
-     'float'    => '* The float number field is wrong',
-     'bool'     => '* The bool field is wrong',
-     'ip'       => '* The IP format field is wrong',
-     'max'      => '* The number of characters exceeded the limit in field',
-     'min'      => '* Missing characters in field',
-     'equals'   => '* The field does not match expected value',
-     'unequal'  => '* The field must be different from the one received',
-     'higher'   => '* The field is lower than expected',
-     'lower'    => '* The field is higher than expected',
-     'regex'    => '* The field is wrong, may contain some characters not allowed',
-     'required' => '* The field is required',
-     'date'     => '* The Date format field is not valid',
-     'richtxt'  => '* The field text contains tags not allowed',
-     'void'     => '* The field must be empty'
+     'numeric'   => '* The field is not a number',
+     'email'     => '* The email field format is wrong',
+     'url'       => '* The URL field format is wrong',
+     'float'     => '* The float number field is wrong',
+     'bool'      => '* The bool field is wrong',
+     'ip'        => '* The IP format field is wrong',
+     'max'       => '* The number of characters exceeded the limit in field',
+     'min'       => '* Missing characters in field',
+     'equals'    => '* The field does not match expected value',
+     'unequal'   => '* The field must be different from the one received',
+     'higher'    => '* The field is lower than expected',
+     'lower'     => '* The field is higher than expected',
+     'regex'     => '* The field is wrong, may contain some characters not allowed',
+     'required'  => '* The field is required',
+     'date'      => '* The Date format field is not valid',
+     'richtxt'   => '* The field text contains tags not allowed',
+     'void'      => '* The field must be empty',
+     'be_file'   => '* The field is required',
+     'file_size' => '* The field size is larger than expected',
+     'file_type' => '* The field type does not match'
     ];
 
 
@@ -41,13 +44,7 @@
     public function validate($values, $request){
       $return = false;
 
-      if($_FILES){
-        array_push($request, $_FILES);
-      }
-
       self::$REQUEST = $request;
-
-      echo var_dump(self::$REQUEST);
 
       foreach($values as $key => $filter) {
         
@@ -65,7 +62,7 @@
 
       if(! empty(self::$ERROR) && ! array_filter(self::$ERROR) && count($_REQUEST) > 1){
         $_REQUEST      = array_replace($_REQUEST, self::$REQUEST);
-        self::$REQUEST = array_replace(self::$REQUEST, self::$ERROR);
+        $request       = array_replace($request, self::$ERROR);
         $return        = true;
       }
 
@@ -236,6 +233,31 @@
       else{
         return false;
       }
+    }
+
+    public static function be_file($value = null, $argument = null){
+      if($_FILES && count($_REQUEST) > 1){
+        $key = array_key_first($_FILES);
+
+        if($_FILES[$key]['name'] && $_FILES[$key]['size'] > 0){
+          return true;
+        }
+      }
+    }
+
+    public static function file_size($value = null, $argument){
+      $size = intval($argument);
+      return files::parse_size($size);
+    }
+
+    public static function file_type($value = null, $argument = null){
+      $type = explode(",", $argument);
+
+      if(count($type) == 1 && current($type) == 'mime'){
+        $type = require_once(ROOT."Config/MIMETypes.php");
+      }
+
+      return files::parse_type($type);
     }
 
     public static function richtxt($value = null, $argument = null){
